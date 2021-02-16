@@ -1,0 +1,34 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users /{userId} {
+      allow read: if request.auth.uid != null;
+      allow create;
+      allow update: if request.auth.uid == userId;
+      allow delete: if request.auth.uid == userId;  
+
+      match/likes/{likeId} {
+        allow read, write: if request.auth.uid == userId;
+      }  
+
+      match/cart/{cartId} {
+        allow read, write: if request.auth.uid == userId;
+      }
+
+      match /orders/{orderId} {
+        allow read, write: if request.auth.uid == userId;
+      }
+    }
+
+     match /products/{productsId} {
+    allow read: if request.auth.uid != null;
+    allow write: if request.auth.uid != null;
+  }
+
+  match /categories/{categoryId} {
+    allow read: if request.auth.uid != null;
+    allow write: if request.auth.uid != null;
+  }
+
+  }
+}
